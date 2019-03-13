@@ -58,6 +58,38 @@ router.get('/bycompany/:company', (req, res, next)=>{
   } );
 }); 
 
+router.get('/bytags/:tag', (req, res, next)=>{
+  mongoModel.getEmployeesByTag((req.params.tag || '').split('_'), (err, docs)=>{
+    if(err){
+      console.log(err);
+      return res.status(500).json({"error":"No se encontro el empleado"});
+    }else{
+      return res.status(200).json(docs);
+    }
+  } );
+});
+
+router.put('/addtags/:id', (req, res, next)=>{
+  mongoModel.addEmployeeATag((req.body.tags || '').split('|'), req.params.id, (err, rsult)=>{
+    if(err){
+      console.log(err);
+      return res.status(500).json({"error":"No se puede actualizar el empleado"});
+    }
+    return res.status(200).json(rsult);
+  });// end addTagsToThing
+});// addtags
+
+
+router.delete('/delete/:thingId', function(req, res, next){
+  var _empId = req.params.empid;
+  mongoModel.removeEmployee(_empId, (err, result)=>{
+    if(err){
+      return res.status(500).json({"error":"No se pudo eliminar el empleado"});
+    }
+    return res.status(200).json(result);
+  }); 
+});
+
 
 
   return router;

@@ -61,7 +61,16 @@ function employeeModel(db){
     return handler(new Error("No Implementado"), null);
   }
 
-  lib.getEmployeesByTag = (tag, handler) => {
+  lib.getEmployeesByTag = (tags, handler) => {
+    
+    var queryObject= {"tags": {"$in": Array.isArray(tags)? tags: [tags]}};
+    empColl.find(queryObject).toArray((err, docs) => {
+      if(err){
+        handler(err, null);
+      }else{
+        handler(null, docs);
+      }
+    });
     //implementar
     // obtener todos los documentos que contenga 
     // al menos una vez el tag dentro del arreglo
@@ -70,7 +79,17 @@ function employeeModel(db){
     return handler(new Error("No Implementado"), null);
   }
 
-  lib.addEmployeeATag = ( tag, id, handler) => {
+  lib.addEmployeeATag = ( tags, id, handler) => {
+    
+    var curatedTags = Array.isArray(tags)? tags: [tags];
+    var updateObject = { "$set": { "tags": curatedTags}};
+    empColl.updateOne({"_id": ObjectId(id)}, updateObject, (err, rsult)=>{
+        if(err){
+          handler(err, null);
+        }else{
+          handler(null, rsult.result);
+        }
+    } );
     //Implementar
     //Se requiere agregar a un documento un nuevo tag
     // $push
@@ -78,6 +97,15 @@ function employeeModel(db){
   }
 
   lib.removeEmployee = (id, handler) => {
+    
+    empColl.deleteOne({"_id": ObjectId(id)}, (err, rslt)=>{
+      if(err){
+        console.log(err);
+        handler(err, null);
+      } else {
+        handler(null, rslt.result);
+      }
+    });
     //Implementar
     //Se requiere eliminar un documento de la colección
     return handler(new Error("No Implementado"), null);
