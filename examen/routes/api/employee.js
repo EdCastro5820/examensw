@@ -16,7 +16,12 @@ function initEmployee(db) {
       DELETE    /delete/:id
       POST      /makeolder               age
    */
-  
+  var emps = {
+    'name':'',
+    'email':null,
+    'company':'',
+    'age':null
+  };
   router.get('/all', (req, res, next) => {
     
     mongoModel.getEmployees(

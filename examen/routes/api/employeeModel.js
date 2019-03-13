@@ -46,7 +46,7 @@ function employeeModel(db){
   }
 
   lib.getEmployeesByAgeRange = (ageLowLimit, ageHighLimit, handler) => {
-    empColl.find({ "Name":name,"email":email,"company":company}, (err, doc)=>{
+    empColl.find({ "MinAge":ageLowLimit,"MaxAge":ageHighLimit}, (err, doc)=>{
       if(err){
         handler(err, null);
       }else{
